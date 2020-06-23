@@ -133,3 +133,24 @@ npm outdated
 Package     Current  Wanted  Latest  Location
 typescript    3.8.3   3.8.3   3.9.5  mkaart
 ```
+
+## Add openlayers
+```bash
+npm install ol
+```
+
+## Add bootstrap
+```bash
+npm install bootstrap
+```
+Change angular.json and add bootstrap in styles (see file changes)
+
+
+## Add components
+```bash
+$ ng generate component location
+$ ng generate component map
+```
+
+# References
+- [error handling](https://grokonez.com/frontend/angular/angular-6/error-handler-angular-6-httpclient-catcherror-retry-with-node-js-express-example)
