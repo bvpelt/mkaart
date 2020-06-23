@@ -146,7 +146,7 @@ npm install bootstrap
 Change angular.json and add bootstrap in styles (see file changes)
 
 
-## Add components
+## Add components 
 ```bash
 $ ng generate component location
 $ ng generate component map
