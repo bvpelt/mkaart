@@ -1,128 +1,191 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-
-import { Map, View } from 'ol';
-import TileLayer from 'ol/layer/Tile';
-import { defaults as defaultControls } from 'ol/control';
-import ZoomToExtent from 'ol/control/ZoomToExtent';
-import Point from 'ol/geom/Point';
-import Projection from 'ol/proj/Projection';
-
-
-import { createStringXY, toStringXY } from 'ol/coordinate';
-import MousePosition from 'ol/control/MousePosition';
-
-import { LocationExchange } from '../shared/services/locationExchange';
-
-import { LayerUtils } from './layers/layerUtils';
-import { BrtLayer } from './layers/brtLayer';
-import { KadastraleKaartLayer } from './layers/kadastraleKaartLayer';
-import { BgtStandaardLayer } from './layers/bgtStandaardLayer';
+import { Component, AfterViewInit } from "@angular/core";
+import { Map, View } from "ol";
+import sync from "ol-hashed";
+import Feature from "ol/Feature";
+import TileLayer from "ol/layer/Tile";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import ZoomToExtent from "ol/control/ZoomToExtent";
+import { createStringXY, toStringXY } from "ol/coordinate";
+import { defaults as defaultControls, FullScreen } from "ol/control";
+import MousePosition from "ol/control/MousePosition";
+import {
+  defaults as defaultInteractions,
+  DragPan,
+  DragRotateAndZoom,
+  MouseWheelZoom,
+  DragZoom,
+  Interaction,
+} from "ol/interaction";
+import { LayerUtil } from "./layerutil/layerutil";
+import { BrtAchtergrondLayer } from "./layerutil/brtachtergrondlayer";
+import { BgtAchtergrondLayer } from "./layerutil/bgtachtergrondlayer";
+import { BgtStandaardLayer } from "./layerutil/bgtstandaardlayer";
+import { LuchtFotoLayer } from "./layerutil/luchtfotolayer";
+import Point from "ol/geom/Point";
+import { Icon, Style } from "ol/style";
+import { LocationExchange } from "../shared/services/locationexchange";
+import { Config } from "../config/config";
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  selector: "app-map",
+  templateUrl: "./map.component.html",
+  styleUrls: ["./map.component.css"],
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements AfterViewInit {
+  public map: Map;
+  private layerUtil: LayerUtil = LayerUtil.instance;
+  private config: Config = Config.instance;
+  private location: Point = this.config.center;
+  private iconLayer: VectorLayer = null;
 
-  /* WMTS PDOK */
-  map: Map;
-  private layerUtils: LayerUtils = new LayerUtils();
-
-  private coordinate = [166546.5, 446639.31]; //[5.55537293, 52.00800145];
-  private location: Point = new Point(this.coordinate);
-
-  constructor(private locationExchange: LocationExchange) { }
-
-  ngOnInit(): void {
-  }
+  constructor(private locationExchange: LocationExchange) {}
 
   ngAfterViewInit() {
-    const mousePositionControl = this.createMouseTracker();
-    const projection: Projection = new Projection({
-      code: this.layerUtils.getProjection(),
-      units: this.layerUtils.getUnits(),
-      extent: this.layerUtils.getProjectionExtent(),
-      getPointResolution: function (resolution) {
-        return resolution;
-      },
-    });
-
-    const brtLayer: BrtLayer = BrtLayer.createBrtLayer();
-    const kadastraleKaartLayer: KadastraleKaartLayer = KadastraleKaartLayer.createKadastraleKaartLayer();
-    const bgtStandaaardLayer: BgtStandaardLayer = BgtStandaardLayer.createBgtStandaardLayer();
+    const mousePositionControl: MousePosition = this.createMouseTracker();
 
     this.map = new Map({
-      target: 'map',
+      target: "map",
+      interactions: defaultInteractions({
+        altShiftDragRotate: true,
+        onFocusOnly: false,
+        doubleClickZoom: true,
+        keyboard: true,
+        mouseWheelZoom: true,
+        shiftDragZoom: true,
+        dragPan: true,
+        pinchRotate: true,
+        pinchZoom: true,
+        zoomDelta: 1,
+        zoomDuration: 10,
+      }).extend([
+        new DragRotateAndZoom(),
+        new DragPan(),
+        new MouseWheelZoom(),
+        new DragZoom(),
+      ]),
       layers: [
         new TileLayer({
           opacity: 1.0,
-          source: brtLayer,
-          zIndex: 0
+          source: BrtAchtergrondLayer.createBrtAchtergrondLayer(),
+          zIndex: 0,
+          visible: true,
+          maxResolution: 3400,
+          minResolution: 1.68,
         }),
         new TileLayer({
           opacity: 1.0,
-          source: kadastraleKaartLayer,
+          source: BgtAchtergrondLayer.createBgtAchtergrondLayer(),
           zIndex: 1,
-          visible: false
+          visible: true,
+          maxResolution: 1.67,
+          minResolution: 0.22,
         }),
         new TileLayer({
           opacity: 1.0,
-          source: bgtStandaaardLayer,
+          source: BgtStandaardLayer.createBgtStandaardLayer(),
           zIndex: 2,
-          visible: false
-        })
+          visible: false,
+          maxResolution: 0.21,
+          minResolution: 0.05,
+        }),
+        new TileLayer({
+          opacity: 1.0,
+          source: LuchtFotoLayer.createLuchtFotoLayer(),
+          zIndex: 2,
+          visible: true,
+          maxResolution: 0.21,
+          minResolution: 0.05,
+        }),
       ],
       view: new View({
-        projection: projection,
+        projection: this.layerUtil.rdProjection,
+        center: this.config.center.getCoordinates(),
+        zoom: 11,
         minResolution: 0.05,
-        maxResolution: 1000
+        maxResolution: 2000,
       }),
       controls: defaultControls().extend([
         new ZoomToExtent({
-          extent: this.layerUtils.getProjectionExtent()
+          extent: this.config.nlxtent.getExtentInternal(),
         }),
-        mousePositionControl
-      ])
+        new FullScreen(),
+        mousePositionControl,
+      ]),
     });
 
     this.map.getView().setMaxZoom(14);
     this.map.getView().setMinZoom(2);
-    this.map.getView().fit(this.layerUtils.getNlExtend(), { constrainResolution: false });
 
-    this.locationExchange.currentLocation.subscribe(point => {
-      this.location = point;
-      const view: View = this.map.getView();
-      const options = [{ padding: [50, 50, 50, 50] }];
-
-      console.log('MapComponent - change location to: ' + toStringXY(point.getCoordinates(), 6), 4);
-      console.log("Current zoom: " + view.getZoom());
-
-      view.fit(point, options);
-      view.setZoom(11);
-
-      console.log("Next zoom: " + view.getZoom());
+    this.locationExchange.currentLocation.subscribe((point) => {
+      this.moveTo(point);
     });
+
+    //sync(this.map);
   }
 
-  setExtentToNL(map: Map) {
-    // timeout toegevoegd om probleem in het portaal te voorkomen waardoor de kaart soms niet getoond werd.
+  private moveTo(
+    point: Point,
+    duration: number = 2000,
+    zoomLevel: number = 11
+  ) {
+    var view: View = this.map.getView();
+    view.animate(
+      { zoom: zoomLevel },
+      {
+        center: point.getCoordinates(),
+        duration: duration,
+      }
+    );
 
-    //setTimeout(() => {
-    map.getView().fit(this.layerUtils.getNlExtend(), { constrainResolution: false });
-    //}, 100);
+    this.setIcon(point);
   }
 
-  createMouseTracker(): MousePosition {
+  private createMouseTracker(): MousePosition {
     var mousePosition: MousePosition = new MousePosition({
-      coordinateFormat: createStringXY(4), // 4 digits
-      projection: this.layerUtils.getProjection(), // 'EPSG:28992',
+      coordinateFormat: createStringXY(3), // 3 digits
+      projection: this.config.projectionName, // 'EPSG:28992',
       // comment the following two lines to have the mouse position
       // be placed within the map.
-      // className: 'custom-mouse-position',
-      // target: document.getElementById('mouse-position'),
-      undefinedHTML: '&nbsp;'
+      className: "custom-mouse-position",
+      target: document.getElementById("mouse-position"),
+      undefinedHTML: "&nbsp;",
     });
     return mousePosition;
-  };
+  }
+
+  private removeIcon() {
+    if (this.iconLayer) {
+      this.map.removeLayer(this.iconLayer);
+    }
+  }
+
+  private setIcon(point: Point) {
+    this.removeIcon();
+
+    const iconFeature = new Feature({
+      geometry: point,
+    });
+
+    const iconStyle = new Style({
+      image: new Icon({
+        anchor: [0.5, 1.0],
+        scale: 1.0,
+        src: "assets/icon.png",
+      }),
+    });
+
+    iconFeature.setStyle(iconStyle);
+
+    const vectorSource = new VectorSource({
+      features: [iconFeature],
+    });
+
+    this.iconLayer = new VectorLayer({
+      source: vectorSource,
+      zIndex: 99999,
+    });
+
+    this.map.addLayer(this.iconLayer);
+  }
 }

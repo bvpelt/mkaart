@@ -1,8 +1,8 @@
-import { SuggestResponse } from './suggestResponse.model';
-import { SuggestSpellCheck } from './suggestSpellCheck.model';
+import { SuggestSpellCheck } from "./suggestspellcheck.model";
+import { SuggestResponse } from "./suggestresponse.model";
 
 export class Suggest {
-    public response: SuggestResponse;
-    public highlighting: any;
-    public spellcheck: SuggestSpellCheck;
+  public response: SuggestResponse;
+  public highlighting: any;
+  public spellcheck: SuggestSpellCheck;
 }

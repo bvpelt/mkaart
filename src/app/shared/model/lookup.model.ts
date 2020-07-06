@@ -1,5 +1,5 @@
-import { SuggestResponse } from './suggestResponse.model';
+import { SuggestResponse } from "./suggestresponse.model";
 
 export class Lookup {
-    public response: SuggestResponse;
+  public response: SuggestResponse;
 }
