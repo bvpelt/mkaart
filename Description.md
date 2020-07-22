@@ -157,3 +157,4 @@ $ ng generate component map
 
 # References
 - [error handling](https://grokonez.com/frontend/angular/angular-6/error-handler-angular-6-httpclient-catcherror-retry-with-node-js-express-example)
+- [resizable div](https://medium.com/the-z/making-a-resizable-div-in-js-is-not-easy-as-you-think-bda19a1bc53d)

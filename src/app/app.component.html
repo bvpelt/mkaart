@@ -1,5 +1,5 @@
-<!--
-    <div>
+<div>
+  <!--
   <div class="mrow">
     <div class="col-sm-4">
       <app-location></app-location>
@@ -14,9 +14,39 @@
 </div>
 -->
 
+  <!--
 <div class="content">
+  <div class="splitleft regels resizable">
+    <div class="resizers">
+      < <div class="resizer top-left"></div> >
+      <div class="resizer top-right"></div>
+      < <div class="resizer bottom-left"></div> >
+      <div class="resizer bottom-right"></div>
+      <app-location> </app-location>
+    </div>
+  </div>
+  <div class="splitright kaart">
+    <app-map></app-map>
+  </div>
+-->
+
+  <!-- 
+    <div class="resizable">
+    <div class="resizers">
+      <div class="resizer top-left"></div>
+      <div class="resizer top-right"></div>
+      <div class="resizer bottom-left"></div>
+      <div class="resizer bottom-right"></div>
+    </div>
+  </div>
+
+  -->
+
   <div class="splitleft regels">
     <app-location> </app-location>
+  </div>
+  <div class="resizer">
+    <app-resizer> </app-resizer>
   </div>
   <div class="splitright kaart">
     <app-map></app-map>

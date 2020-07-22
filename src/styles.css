@@ -24,6 +24,12 @@ body {
     line-height: 1;
 }
 
+/*
+body, html {
+    background: black;
+}
+*/
+
 ol, ul {
     list-style: none;
 }
