@@ -1,54 +1,11 @@
-<div>
-  <!--
-  <div class="mrow">
-    <div class="col-sm-4">
-      <app-location></app-location>
-    </div>
-    <div class="col-sm-8">
-      <app-map></app-map>
-    </div>
-  </div>
-
-<router-outlet></router-outlet>
-
-</div>
--->
-
-  <!--
-<div class="content">
-  <div class="splitleft regels resizable">
-    <div class="resizers">
-      < <div class="resizer top-left"></div> >
-      <div class="resizer top-right"></div>
-      < <div class="resizer bottom-left"></div> >
-      <div class="resizer bottom-right"></div>
-      <app-location> </app-location>
-    </div>
-  </div>
-  <div class="splitright kaart">
-    <app-map></app-map>
-  </div>
--->
-
-  <!-- 
-    <div class="resizable">
-    <div class="resizers">
-      <div class="resizer top-left"></div>
-      <div class="resizer top-right"></div>
-      <div class="resizer bottom-left"></div>
-      <div class="resizer bottom-right"></div>
-    </div>
-  </div>
-
-  -->
-
-  <div class="splitleft regels">
+<div class="flex-container">
+  <div class="left regels">
     <app-location> </app-location>
   </div>
   <div class="resizer">
-    <app-resizer> </app-resizer>
+    <app-slider (sliderResult)="updateSize($event)"> </app-slider>
   </div>
-  <div class="splitright kaart">
+  <div class="right kaart">
     <app-map></app-map>
   </div>
 </div>

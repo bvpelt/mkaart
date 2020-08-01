@@ -10,10 +10,16 @@ import { MapComponent } from "./map/map.component";
 import { ErrorComponent } from "./error/error.component";
 import { HttpErrorHandler } from "./shared/services/httperrorhandler";
 import { LocationExchange } from "./shared/services/locationexchange";
-import { ResizerComponent } from './resizer/resizer.component';
+import { SliderComponent } from "./slider/slider.component";
 
 @NgModule({
-  declarations: [AppComponent, LocationComponent, MapComponent, ErrorComponent, ResizerComponent],
+  declarations: [
+    AppComponent,
+    LocationComponent,
+    MapComponent,
+    ErrorComponent,
+    SliderComponent,
+  ],
   imports: [AppRoutingModule, BrowserModule, FormsModule, HttpClientModule],
   providers: [HttpErrorHandler, LocationExchange],
   bootstrap: [AppComponent],

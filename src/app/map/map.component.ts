@@ -26,6 +26,7 @@ import Point from "ol/geom/Point";
 import { Icon, Style } from "ol/style";
 import { LocationExchange } from "../shared/services/locationexchange";
 import { Config } from "../config/config";
+import { SliderResult } from "../shared/model/sliderresult";
 
 @Component({
   selector: "app-map",
@@ -187,5 +188,16 @@ export class MapComponent implements AfterViewInit {
     });
 
     this.map.addLayer(this.iconLayer);
+  }
+
+  updateSize($event: SliderResult): void {
+    console.log(
+      "map updateSize - x: " +
+        $event.x +
+        " size: " +
+        $event.screenSize +
+        " new width: " +
+        (100 * ($event.screenSize - $event.x)) / $event.screenSize
+    );
   }
 }
