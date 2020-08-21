@@ -81,40 +81,39 @@ export class MapComponent implements AfterViewInit {
           source: BrtAchtergrondLayer.createBrtAchtergrondLayer(),
           zIndex: 0,
           visible: true,
-          maxResolution: 3400,
-          minResolution: 1.68,
+          minZoom: 1,
+          maxZoom: 12,
         }),
         new TileLayer({
           opacity: 1.0,
           source: BgtAchtergrondLayer.createBgtAchtergrondLayer(),
           zIndex: 1,
           visible: true,
-          maxResolution: 1.67,
-          minResolution: 0.22,
+          minZoom: 12,
+          maxZoom: 14,
         }),
         new TileLayer({
           opacity: 1.0,
           source: BgtStandaardLayer.createBgtStandaardLayer(),
           zIndex: 2,
           visible: false,
-          maxResolution: 0.21,
-          minResolution: 0.05,
+          minZoom: 12,
+          maxZoom: 14,
         }),
         new TileLayer({
           opacity: 1.0,
           source: LuchtFotoLayer.createLuchtFotoLayer(),
           zIndex: 2,
           visible: true,
-          maxResolution: 0.21,
-          minResolution: 0.05,
+          minZoom: 14,
         }),
       ],
       view: new View({
         projection: this.layerUtil.rdProjection,
         center: this.config.center.getCoordinates(),
         zoom: 11,
-        minResolution: 0.05,
-        maxResolution: 2000,
+        minZoom: 2,
+        maxZoom: 16,
       }),
       controls: defaultControls().extend([
         new ZoomToExtent({
@@ -127,14 +126,11 @@ export class MapComponent implements AfterViewInit {
 
     this.mapService.setMap(this.map);
 
-    this.map.getView().setMaxZoom(14);
-    this.map.getView().setMinZoom(2);
-
     this.locationExchange.currentLocation.subscribe((point) => {
       this.moveTo(point);
     });
 
-    // sync(this.map);
+    sync(this.map);
   }
 
   private moveTo(

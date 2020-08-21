@@ -11,7 +11,6 @@ import Point from 'ol/geom/Point';
 import * as olCoordinate from 'ol/coordinate';
 import { toStringXY } from 'ol/coordinate';
 import { LocationExchange } from '../shared/services/locationexchange';
-import { SliderResult } from '../shared/model/sliderresult';
 
 @Component({
   selector: 'app-location',

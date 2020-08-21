@@ -17,16 +17,6 @@
   width: 20%;
 }
 
-/*
-.flex-container .resizer {
-  width: 3px;
-  border: solid;
-  border-width: 1px;
-  border-color: black;
-  cursor: ew-resize;
-}
-*/
-
 .flex-container .right {
   width: 80%;
 }
