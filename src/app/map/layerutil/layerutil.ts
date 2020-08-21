@@ -1,7 +1,7 @@
-import Extent from "ol/interaction/Extent";
-import Point from "ol/geom/Point";
-import Projection from "ol/proj/Projection";
-import { Config } from "src/app/config/config";
+import Extent from 'ol/interaction/Extent';
+import Point from 'ol/geom/Point';
+import Projection from 'ol/proj/Projection';
+import { Config } from 'src/app/config/config';
 
 export class LayerUtil {
   private static _instance: LayerUtil = null;
@@ -30,15 +30,16 @@ export class LayerUtil {
     code: this.config.projectionName,
     units: this.config.units,
     extent: this.config.projectionExtent,
-    getPointResolution: function (resolution) {
+
+    getPointResolution(resolution) {
       return resolution;
     },
   });
 
   private constructor() {
     for (let z = 0; z < this.resolutions.length; ++z) {
-      this.matrixIds[z] = this.config.projectionName + ":" + z;
-      //console.log('LayerUtil - Generating matrixids[' + z + ']: ' + this._matrixIds[z]);
+      this.matrixIds[z] = this.config.projectionName + ':' + z;
+      // console.log('LayerUtil - Generating matrixids[' + z + ']: ' + this._matrixIds[z]);
     }
   }
 

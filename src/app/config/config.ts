@@ -1,17 +1,16 @@
-import Extent from "ol/interaction/Extent";
-import Point from "ol/geom/Point";
-import Coordinate from "ol/coordinate";
+import Extent from 'ol/interaction/Extent';
+import Point from 'ol/geom/Point';
+import Coordinate from 'ol/coordinate';
 
 export class Config {
   private static _instance: Config;
 
-  pdokwmtsurl: string =
-    "https://geodata.nationaalgeoregister.nl/tiles/service/wmts?";
-  pdokwmtsluchtfoto: string =
-    "https://geodata.nationaalgeoregister.nl/luchtfoto/rgb/wmts?";
-  pdokwmtsimageformat: string = "image/png";
-  projectionName: string = "EPSG:28992";
-  units: string = "m";
+  pdokwmtsurl = 'https://geodata.nationaalgeoregister.nl/tiles/service/wmts?';
+  pdokwmtsluchtfoto =
+    'https://geodata.nationaalgeoregister.nl/luchtfoto/rgb/wmts?';
+  pdokwmtsimageformat = 'image/png';
+  projectionName = 'EPSG:28992';
+  units = 'm';
   projectionExtent: any = [
     -285401.92,
     22598.08,

@@ -4,14 +4,14 @@ import {
   OnDestroy,
   OnInit,
   Output,
-} from "@angular/core";
+} from '@angular/core';
 import {
   combineLatest,
   fromEvent,
   MonoTypeOperatorFunction,
   Observable,
   Subject,
-} from "rxjs";
+} from 'rxjs';
 import {
   debounceTime,
   distinctUntilKeyChanged,
@@ -22,27 +22,28 @@ import {
   switchMapTo,
   takeUntil,
   tap,
-} from "rxjs/operators";
-import { SliderResult } from "../shared/model/sliderresult";
+} from 'rxjs/operators';
+import { SliderResult } from '../shared/model/sliderresult';
+import { SliderService } from './slider.service';
 
 @Component({
-  selector: "app-slider",
-  templateUrl: "./slider.component.html",
-  styleUrls: ["./slider.component.css"],
+  selector: 'app-slider',
+  templateUrl: './slider.component.html',
+  styleUrls: ['./slider.component.css'],
 })
 export class SliderComponent implements OnInit, OnDestroy {
-  @Output() public sliderResult = new EventEmitter<SliderResult>();
+  public sliderResult = new EventEmitter<SliderResult>();
   public showIndicator = false;
 
   private onDestroy$ = new Subject<void>();
   private mouseDownSubject$ = new Subject<void>();
 
-  private onWindowResize$ = fromEvent(window, "resize").pipe(
+  private onWindowResize$ = fromEvent(window, 'resize').pipe(
     debounceTime(50),
     startWith(null)
   );
 
-  constructor() {}
+  constructor(private sliderService: SliderService) {}
 
   public ngOnInit(): void {
     combineLatest([this.handleMouseDragging$(), this.onWindowResize$])
@@ -51,13 +52,13 @@ export class SliderComponent implements OnInit, OnDestroy {
           x: mousePosition,
           screenSize: Math.floor(document.documentElement.clientWidth),
         })),
-        distinctUntilKeyChanged("x"),
+        distinctUntilKeyChanged('x'),
         map((sliderResult) => this.limitPanelSize(sliderResult)),
         takeUntil(this.onDestroy$)
       )
       .subscribe((result) => {
-        console.log("Slider emit sliderresult: " + JSON.stringify(result));
-        this.sliderResult.emit(result);
+        // console.log("Slider emit sliderresult: " + JSON.stringify(result));
+        this.sliderService.sliderChange.next(result);
       });
   }
 
@@ -70,32 +71,33 @@ export class SliderComponent implements OnInit, OnDestroy {
     this.mouseDownSubject$.pipe(
       switchMapTo(this.onMouseMove$()),
       this.startStopMouseDragging$(),
-      pluck("clientX")
+      pluck('clientX')
     );
 
   private onMouseMove$ = () =>
-    fromEvent<MouseEvent>(document, "mousemove").pipe(
+    fromEvent<MouseEvent>(document, 'mousemove').pipe(
       tap((evt) => evt.preventDefault())
     );
 
   private onMouseUp$ = () =>
-    fromEvent<MouseEvent>(document, "mouseup").pipe(
+    fromEvent<MouseEvent>(document, 'mouseup').pipe(
       tap((evt) => {
         evt.preventDefault();
-        console.log("Slider: Mouseup");
+        console.log('Slider: Mouseup');
       })
     );
 
   public onMouseDown(evt: MouseEvent): void {
     evt.preventDefault();
-    console.log("Slider: MouseDown");
+    console.log('Slider: MouseDown');
     this.mouseDownSubject$.next(null);
   }
 
-  /**
-   * this custom RxJS operator has a sideeffect which shows the dragging indicator
-   * @NOTE revive observable with takeuntil repeat trick, see https://medium.com/angular-in-depth/rxjs-repeat-operator-beginner-necromancer-guide-391a3b2ad3ad
-   */
+  //
+  // this custom RxJS operator has a sideeffect which shows the dragging indicator
+  // @NOTE revive observable with takeuntil repeat trick,
+  // see https://medium.com/angular-in-depth/rxjs-repeat-operator-beginner-necromancer-guide-391a3b2ad3ad
+  //
   private startStopMouseDragging$<T>(): MonoTypeOperatorFunction<T> {
     return (source: Observable<T>) =>
       source.pipe(

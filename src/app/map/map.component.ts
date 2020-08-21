@@ -1,14 +1,14 @@
-import { Component, AfterViewInit } from "@angular/core";
-import { Map, View } from "ol";
-import sync from "ol-hashed";
-import Feature from "ol/Feature";
-import TileLayer from "ol/layer/Tile";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import ZoomToExtent from "ol/control/ZoomToExtent";
-import { createStringXY, toStringXY } from "ol/coordinate";
-import { defaults as defaultControls, FullScreen } from "ol/control";
-import MousePosition from "ol/control/MousePosition";
+import { Component, AfterViewInit } from '@angular/core';
+import { Map, View } from 'ol';
+import sync from 'ol-hashed';
+import Feature from 'ol/Feature';
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import ZoomToExtent from 'ol/control/ZoomToExtent';
+import { createStringXY, toStringXY } from 'ol/coordinate';
+import { defaults as defaultControls, FullScreen } from 'ol/control';
+import MousePosition from 'ol/control/MousePosition';
 import {
   defaults as defaultInteractions,
   DragPan,
@@ -16,22 +16,23 @@ import {
   MouseWheelZoom,
   DragZoom,
   Interaction,
-} from "ol/interaction";
-import { LayerUtil } from "./layerutil/layerutil";
-import { BrtAchtergrondLayer } from "./layerutil/brtachtergrondlayer";
-import { BgtAchtergrondLayer } from "./layerutil/bgtachtergrondlayer";
-import { BgtStandaardLayer } from "./layerutil/bgtstandaardlayer";
-import { LuchtFotoLayer } from "./layerutil/luchtfotolayer";
-import Point from "ol/geom/Point";
-import { Icon, Style } from "ol/style";
-import { LocationExchange } from "../shared/services/locationexchange";
-import { Config } from "../config/config";
-import { SliderResult } from "../shared/model/sliderresult";
+} from 'ol/interaction';
+import { LayerUtil } from './layerutil/layerutil';
+import { BrtAchtergrondLayer } from './layerutil/brtachtergrondlayer';
+import { BgtAchtergrondLayer } from './layerutil/bgtachtergrondlayer';
+import { BgtStandaardLayer } from './layerutil/bgtstandaardlayer';
+import { LuchtFotoLayer } from './layerutil/luchtfotolayer';
+import Point from 'ol/geom/Point';
+import { Icon, Style } from 'ol/style';
+import { LocationExchange } from '../shared/services/locationexchange';
+import { Config } from '../config/config';
+import { SliderResult } from '../shared/model/sliderresult';
+import { MapService } from './map.service';
 
 @Component({
-  selector: "app-map",
-  templateUrl: "./map.component.html",
-  styleUrls: ["./map.component.css"],
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements AfterViewInit {
   public map: Map;
@@ -40,13 +41,22 @@ export class MapComponent implements AfterViewInit {
   private location: Point = this.config.center;
   private iconLayer: VectorLayer = null;
 
-  constructor(private locationExchange: LocationExchange) {}
+  constructor(
+    private locationExchange: LocationExchange,
+    private mapService: MapService
+  ) {
+    this.mapService.mapChange.subscribe((event: SliderResult) => {
+      setTimeout(() => {
+        this.mapService.map.updateSize();
+      }, 100);
+    });
+  }
 
   ngAfterViewInit() {
     const mousePositionControl: MousePosition = this.createMouseTracker();
 
     this.map = new Map({
-      target: "map",
+      target: 'map',
       interactions: defaultInteractions({
         altShiftDragRotate: true,
         onFocusOnly: false,
@@ -115,6 +125,8 @@ export class MapComponent implements AfterViewInit {
       ]),
     });
 
+    this.mapService.setMap(this.map);
+
     this.map.getView().setMaxZoom(14);
     this.map.getView().setMinZoom(2);
 
@@ -122,7 +134,7 @@ export class MapComponent implements AfterViewInit {
       this.moveTo(point);
     });
 
-    //sync(this.map);
+    // sync(this.map);
   }
 
   private moveTo(
@@ -130,7 +142,7 @@ export class MapComponent implements AfterViewInit {
     duration: number = 2000,
     zoomLevel: number = 11
   ) {
-    var view: View = this.map.getView();
+    const view: View = this.map.getView();
     view.animate(
       { zoom: zoomLevel },
       {
@@ -143,14 +155,14 @@ export class MapComponent implements AfterViewInit {
   }
 
   private createMouseTracker(): MousePosition {
-    var mousePosition: MousePosition = new MousePosition({
+    const mousePosition: MousePosition = new MousePosition({
       coordinateFormat: createStringXY(3), // 3 digits
       projection: this.config.projectionName, // 'EPSG:28992',
       // comment the following two lines to have the mouse position
       // be placed within the map.
-      className: "custom-mouse-position",
-      target: document.getElementById("mouse-position"),
-      undefinedHTML: "&nbsp;",
+      className: 'custom-mouse-position',
+      target: document.getElementById('mouse-position'),
+      undefinedHTML: '&nbsp;',
     });
     return mousePosition;
   }
@@ -172,7 +184,7 @@ export class MapComponent implements AfterViewInit {
       image: new Icon({
         anchor: [0.5, 1.0],
         scale: 1.0,
-        src: "assets/icon.png",
+        src: 'assets/icon.png',
       }),
     });
 
@@ -192,11 +204,11 @@ export class MapComponent implements AfterViewInit {
 
   updateSize($event: SliderResult): void {
     console.log(
-      "map updateSize - x: " +
+      'map updateSize - x: ' +
         $event.x +
-        " size: " +
+        ' size: ' +
         $event.screenSize +
-        " new width: " +
+        ' new width: ' +
         (100 * ($event.screenSize - $event.x)) / $event.screenSize
     );
   }

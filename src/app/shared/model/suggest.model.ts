@@ -1,5 +1,5 @@
-import { SuggestSpellCheck } from "./suggestspellcheck.model";
-import { SuggestResponse } from "./suggestresponse.model";
+import { SuggestSpellCheck } from './suggestspellcheck.model';
+import { SuggestResponse } from './suggestresponse.model';
 
 export class Suggest {
   public response: SuggestResponse;
