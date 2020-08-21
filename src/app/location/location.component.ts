@@ -99,8 +99,7 @@ export class LocationComponent implements OnInit {
           | LookupGemeente
           | LookupWoonplaats
           | LookupWeg
-          | LookupPostCode
-          | LookupAdres;
+          | LookupPostCode;
         console.log('Type of result 01: ' + doc.type);
         const rdstring = doc.centroide_rd; // doc.centroide_rd;
         console.log('Center coord: ' + rdstring);
