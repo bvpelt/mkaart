@@ -1,0 +1,22 @@
+.regels {
+  left: 8px;
+}
+
+/* Control the right side */
+
+.kaart {
+  right: 0;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-container .left {
+  width: 20%;
+}
+
+.flex-container .right {
+  width: 80%;
+}

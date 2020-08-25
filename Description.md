@@ -43,12 +43,12 @@ CREATE kaart/e2e/src/app.po.ts (301 bytes)
 
 ## Test project
 To verify the project works
-```
+```bash
 $ npm start
 ```
 
 ## Check versions
-```
+```bash
 $ npm outdated
 Package                             Current    Wanted   Latest  Location
 @angular-devkit/build-angular       0.900.7   0.900.7  0.901.9  kaart
@@ -74,3 +74,87 @@ tslib                                1.13.0    1.13.0    2.0.0  kaart
 tslint                               5.18.0    5.18.0    6.1.2  kaart
 typescript                            3.7.5     3.7.5    3.9.5  kaart
 ```
+
+## Upgrade version
+### Save current state
+```bash
+$ git checkout -b upgrade-01
+```
+
+### Update versions
+In package.json set the latest versions for each used package and install latest packages
+```bash
+$ npm install
+```
+Verify everything still works
+```bash
+$ npm start
+
+> mkaart@0.0.0 start /home/bvpelt/Develop/mkaart
+> ng serve
+
+Compiling @angular/core : es2015 as esm2015
+Compiling @angular/animations : es2015 as esm2015
+Compiling @angular/compiler/testing : es2015 as esm2015
+Compiling @angular/common : es2015 as esm2015
+Compiling @angular/animations/browser : es2015 as esm2015
+Compiling @angular/core/testing : es2015 as esm2015
+Compiling @angular/platform-browser : es2015 as esm2015
+Compiling @angular/common/http : es2015 as esm2015
+Compiling @angular/animations/browser/testing : es2015 as esm2015
+Compiling @angular/common/testing : es2015 as esm2015
+Compiling @angular/router : es2015 as esm2015
+Compiling @angular/forms : es2015 as esm2015
+Compiling @angular/platform-browser/testing : es2015 as esm2015
+Compiling @angular/platform-browser-dynamic : es2015 as esm2015
+Compiling @angular/platform-browser/animations : es2015 as esm2015
+Compiling @angular/common/http/testing : es2015 as esm2015
+Compiling @angular/platform-browser-dynamic/testing : es2015 as esm2015
+Compiling @angular/router/testing : es2015 as esm2015
+
+chunk {main} main.js, main.js.map (main) 1.99 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 673 bytes [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.15 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 12.4 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 340 kB [initial] [rendered]
+Date: 2020-06-22T18:28:00.330Z - Hash: c7dfee0efcb2491c2ea0 - Time: 486ms
+
+ERROR in The Angular Compiler requires TypeScript >=3.6.4 and <3.9.0 but 3.9.5 was found instead.
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+```
+
+Since there is an error message set typescript to 3.8.3 in package.json rerun ```npm install``` followed by ```npm start``` to verify everything is ok.
+
+It worked
+
+### Check for outdated
+```bash
+npm outdated
+Package     Current  Wanted  Latest  Location
+typescript    3.8.3   3.8.3   3.9.5  mkaart
+```
+
+## Add openlayers
+```bash
+npm install ol
+```
+
+## Add bootstrap
+```bash
+npm install bootstrap
+```
+Change angular.json and add bootstrap in styles (see file changes)
+
+
+## Add components 
+```bash
+$ ng generate component location
+$ ng generate component map
+```
+
+## Reference 
+- https://github.com/bvpelt/angcourse branche step-11
+
+# References
+- [error handling](https://grokonez.com/frontend/angular/angular-6/error-handler-angular-6-httpclient-catcherror-retry-with-node-js-express-example)
+- [resizable div](https://medium.com/the-z/making-a-resizable-div-in-js-is-not-easy-as-you-think-bda19a1bc53d)

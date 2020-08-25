@@ -1,0 +1,17 @@
+#size-slider {
+    position: absolute;
+    z-index: 999;
+    width: 12px;
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+}
+
+#new-position-indicator {
+    position: fixed;
+    height: 100%;
+    top: 0;
+    width: 12px;
+    background-color: grey;
+    z-index: 999;
+}

@@ -1,0 +1,7 @@
+<div (mousedown)="onMouseDown($event)" id="size-slider"></div>
+
+<div
+  [style.display]="showIndicator ? 'block' : 'none'"
+  [style.left]="(sliderResult | async)?.x + 'px'"
+  id="new-position-indicator"
+></div>
