@@ -28,6 +28,7 @@ import { LocationExchange } from '../shared/services/locationexchange';
 import { Config } from '../config/config';
 import { SliderResult } from '../shared/model/sliderresult';
 import { MapService } from './map.service';
+import { BagPandenLayer } from './layerutil/bagpanden';
 
 @Component({
   selector: 'app-map',
@@ -106,6 +107,16 @@ export class MapComponent implements AfterViewInit {
           zIndex: 2,
           visible: true,
           minZoom: 14,
+        }),
+        new TileLayer({
+          opacity: 0.5,
+          source: BagPandenLayer.createBagPandenLayer(),
+          zIndex: 3,
+          //          style: 'default',
+          style: '_null',
+          visible: true,
+          minZoom: 12,
+          maxZoom: 14,
         }),
       ],
       view: new View({
